@@ -1,32 +1,33 @@
 pipelines:
-  distributed-node:
-    group: distributed-node-group
-    label_template: "${COUNT}"
-    materials:
-      git:
-        url: https://github.com/TebogoTS/distributed-node.git
-        branch: main
-    stages:
-      - build:
-          jobs:
-            build:
-              tasks:
-                - exec:
-                    command: docker
-                    arguments:
-                      - build
-                      - -t
-                      - distributed-node:latest
-                      - .
-      - deploy:
-          jobs:
-            deploy:
-              tasks:
-                - exec:
-                    command: docker
-                    arguments:
-                      - run
-                      - -d
-                      - -p
-                      - "3000:3000"
-                      - distributed-node:latest
+  pipeline:
+    distributed-node:
+      group: distributed-node-group
+      label_template: "${COUNT}"
+      materials:
+        git:
+          url: https://github.com/TebogoTS/distributed-node.git
+          branch: main
+      stages:
+        - build:
+            jobs:
+              build:
+                tasks:
+                  - exec:
+                      command: docker
+                      arguments:
+                        - build
+                        - -t
+                        - distributed-node:latest
+                        - .
+        - deploy:
+            jobs:
+              deploy:
+                tasks:
+                  - exec:
+                      command: docker
+                      arguments:
+                        - run
+                        - -d
+                        - -p
+                        - "3000:3000"
+                        - distributed-node:latest
