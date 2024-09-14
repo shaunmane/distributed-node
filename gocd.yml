@@ -1,6 +1,6 @@
 pipelines:
   distributed-node:
-    group: defaultGroup
+    group: distributed-node-group
     label_template: "${COUNT}"
     materials:
       git:
@@ -9,7 +9,7 @@ pipelines:
     stages:
       - name: build
         jobs:
-          build:
+          - name: build
             tasks:
               - exec:
                   command: docker
@@ -20,7 +20,7 @@ pipelines:
                     - .
       - name: deploy
         jobs:
-          deploy:
+          - name: deploy
             tasks:
               - exec:
                   command: docker
