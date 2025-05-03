@@ -1,11 +1,20 @@
 ## Tutorial: Setting Up Producer and Consumer Services
 
-This tutorial will guide you through the setup and running of two Node.js applications: a producer service and a consumer service. The producer service provides recipe data, and the consumer service fetches this data from the producer and returns it to the client. We will also cover installing dependencies, running the applications, and testing the setup.
+This tutorial will guide you through the setup and running of two Python.py applications: a producer service and a consumer service. The producer service provides recipe data, and the consumer service fetches this data from the producer and returns it to the client. We will also cover installing dependencies, running the applications, and testing the setup.
 
-### Prerequisites
+## Table of Content
+- [Prerequisites](#prerequisites)
+- [Step 1: Setting Up The Producer Service](#step-1-setting-up-the-producer-service)
+- [Step 2: Setting Up The Consumer Service](#step-2-setting-up-the-consumer-service)
+- [Step 3: Testing The Setup](#step-3-testing-the-setup)
+- [Step 4: Dockerise The Application](#step-4-dockerize-the-application)
 
-- Node.js installed on your machine (download from [nodejs.org](https://nodejs.org/))
-- npm (comes with Node.js) or yarn
+## Prerequisites
+
+- Python installed on your machine (download from [python.org](https://www.python.org/))
+- pip (comes with Python) or PyPI
+
+___
 
 ### Step 1: Setting Up the Producer Service
 
@@ -16,21 +25,15 @@ This tutorial will guide you through the setup and running of two Node.js applic
    cd producer
    ```
 
-2. **Initialize a Node.js Project**
+2. **Install Dependencies**
 
    ```bash
-   npm init -y
+   pip install fastapi
    ```
 
-3. **Install Dependencies**
+3. **Create the Producer Script**
 
-   ```bash
-   npm install fastify@3.2
-   ```
-
-4. **Create the Producer Script**
-
-   Create a file named `producer.js` and add the following code:
+   Create a file named `producer.py` and add the following code:
 
    ```javascript
    #!/usr/bin/env node
@@ -66,10 +69,10 @@ This tutorial will guide you through the setup and running of two Node.js applic
    });
    ```
 
-5. **Run the Producer Service**
+4. **Run the Producer Service**
 
    ```bash
-   node producer.js
+   python3 producer.py
    ```
 
    You should see output indicating the producer is running.
@@ -83,19 +86,13 @@ This tutorial will guide you through the setup and running of two Node.js applic
    cd ../consumer
    ```
 
-2. **Initialize a Node.js Project**
+2. **Install Dependencies**
 
    ```bash
-   npm init -y
+   pip install fastapi & requests@2.32
    ```
 
-3. **Install Dependencies**
-
-   ```bash
-   npm install fastify@3.2 node-fetch@2.6
-   ```
-
-4. **Create the Consumer Script**
+3. **Create the Consumer Script**
 
    Create a file named `consumer.js` and add the following code:
 
@@ -123,10 +120,10 @@ This tutorial will guide you through the setup and running of two Node.js applic
    });
    ```
 
-5. **Run the Consumer Service**
+4. **Run the Consumer Service**
 
    ```bash
-   node consumer.js
+   python3 consumer.py
    ```
 
    You should see output indicating the consumer is running.
@@ -188,7 +185,7 @@ This tutorial will guide you through the setup and running of two Node.js applic
 
 ### Conclusion
 
-You have successfully set up and run both the producer and consumer services. The producer provides recipe data, and the consumer fetches and returns this data. This setup demonstrates basic microservice communication using Node.js and Fastify.
+You have successfully set up and run both the producer and consumer services. The producer provides recipe data, and the consumer fetches and returns this data. This setup demonstrates basic microservice communication using Python and FastAPI.
 
 ### Additional Notes
 
