@@ -6,8 +6,8 @@ import uvicorn
 
 app = FastAPI()
 
-HOST = os.getenv('HOST', '127.0.0.1') 
-PORT = int(os.getenv('PORT', 4000))  
+HOST = os.getenv('HOST', '127.0.0.1')  
+PORT = int(os.getenv('PORT', 4000))   
 
 # Get the process ID of the current process
 pid = os.getpid()

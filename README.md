@@ -7,12 +7,13 @@ This tutorial will guide you through the setup and running of two Python.py appl
 - [Step 1: Setting Up The Producer Service](#step-1-setting-up-the-producer-service)
 - [Step 2: Setting Up The Consumer Service](#step-2-setting-up-the-consumer-service)
 - [Step 3: Testing The Setup](#step-3-testing-the-setup)
-- [Step 4: Dockerise The Application](#step-4-dockerize-the-application)
+- [Step 4: Containerize The Application](#step-4-containerize-the-application)
 
 ## Prerequisites
 
 - Python installed on your machine (download from [python.org](https://www.python.org/))
 - pip (comes with Python) or PyPI
+- Docker Desktop installed on your machine (download from [docker.com](https://www.docker.com/products/docker-desktop/))
 
 ___
 
@@ -35,39 +36,44 @@ ___
 
    Create a file named `producer.py` and add the following code:
 
-   ```javascript
-   #!/usr/bin/env node
+    ```python
+    from fastapi import FastAPI, HTTPException
+    from fastapi.responses import JSONResponse
+    import os
+    import uvicorn
 
-   const server = require('fastify')();
-   const HOST = process.env.HOST || '127.0.0.1';
-   const PORT = process.env.PORT || 4000;
+    app = FastAPI()
 
-   console.log(`worker pid=${process.pid}`);
+    HOST = os.getenv('HOST', '127.0.0.1')  
+    PORT = int(os.getenv('PORT', 4000))   
 
-   server.get('/recipes/:id', async (req, reply) => {
-       console.log(`worker request pid=${process.pid}`);
-       const id = Number(req.params.id);
-       if (id !== 42) {
-           reply.statusCode = 404;
-           return { error: 'not_found' };
-       }
-       return {
-           producer_pid: process.pid,
-           recipe: {
-               id, name: "Chicken Tikka Masala",
-               steps: "Throw it in a pot...",
-               ingredients: [
-                   {id: 1, name: "Chicken", quantity: "1 lb", },
-                   {id: 2, name: "Sauce", quantity: "2 cups", }
-               ]
-           }
-       };
-   });
+    pid = os.getpid()
 
-   server.listen(PORT, HOST, () => {
-       console.log(`Producer running at http://${HOST}:${PORT}`);
-   });
-   ```
+    @app.get("/recipes/{id}")
+    async def recipes(id: int):
+        print(f"Worker pid = {pid}")
+        
+        if id != 42:
+            raise HTTPException(status_code=404, detail="not_found")
+        
+        recipe = [{
+            "producer_pid": os.getpid(),
+            "recipe": {
+                "id": id,
+                "name": "Chicken Tikka Masala",
+                "steps": "Throw it in a pot...",
+                "ingredients": [
+                    {"id": 1, "name": "Chicken", "quantity": "1 lb"},
+                    {"id": 2, "name": "Sauce", "quantity": "2 cups"},
+                ],
+            },
+        }]
+        return recipe
+
+    if __name__ == "__main__":
+        print(f"Producer running at http://{HOST}:{PORT}")
+        uvicorn.run(app, host=HOST, port=PORT)
+    ```
 
 4. **Run the Producer Service**
 
@@ -182,6 +188,85 @@ ___
        }
    }
    ```
+
+### Step 4: Containerize The Application
+
+1. **Create a Directory for the Containers**
+
+   ```bash
+   mkdir containerize
+   cd containerize
+   ```
+
+2. **Create Dockerfiles**
+
+   Create a file named `requirements.txt` with the required dependencies and add the following code:
+
+   ```
+   fastapi
+   uvicorn
+   requests
+   ```
+
+   Create a file named `Dockerfile-producer` and add the following code:
+
+   ```DOCKERFILE
+   FROM python:3.11-slim
+   
+   WORKDIR /app
+   
+   COPY requirements.txt . 
+   COPY producer.py .
+   
+   RUN pip install --no-cache-dir -r requirements.txt
+   
+   EXPOSE 80
+   
+   CMD ["python", "producer.py", "--port", "80"]
+   ```
+
+   Create another file named `Dockerfile-consumer` and add the following code:
+   
+   ```DOCKERFILE
+   FROM python:3.11-slim
+   
+   WORKDIR /app
+   
+   COPY requirements.txt . 
+   COPY consumer.py .
+   
+   RUN pip install --no-cache-dir -r requirements.txt
+   
+   EXPOSE 81
+   
+   CMD ["python", "consumer.py", "--port", "81"]
+   ```
+
+3. **Copy Producer & Consumer files to Containerize**
+
+   ```bash
+   cp /'producers(recipe-api)'/producer.py /containerize/
+   ```
+   ```bash
+   cp /'consumers(web-api)'/producer.py /containerize/
+   ```
+
+3. **Build & Run Docker Images**
+
+   ```bash
+   docker build -f Dockerfile-producer -t producer .
+   ```
+   ```sh
+   docker run -p 4000:80 producer
+   ```
+   ```bash
+   docker build -f Dockerfile-consumer -t consumer .
+   ```
+   ```sh
+   docker run -p 3000:81 consumer
+   ```
+
+### Step 5: Create Helm Chart
 
 ### Conclusion
 
