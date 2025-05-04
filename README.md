@@ -28,7 +28,7 @@ ___
 2. **Install Dependencies**
 
    ```bash
-   pip install fastapi
+   pip install fastapi uvicorn
    ```
 
 3. **Create the Producer Script**
@@ -94,7 +94,7 @@ ___
 
 3. **Create the Consumer Script**
 
-   Create a file named `consumer.js` and add the following code:
+   Create a file named `consumer.py` and add the following code:
 
    ```javascript
    #!/usr/bin/env node
