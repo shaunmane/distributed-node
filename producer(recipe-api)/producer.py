@@ -1,6 +1,5 @@
-# pip install fastapi
+# pip install fastapi uvicorn
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
 import os
 import uvicorn
 
@@ -20,7 +19,7 @@ async def recipes(id: int):
         raise HTTPException(status_code=404, detail="not_found")
     
     recipe = [{
-        "producer_pid": os.getpid(),
+        "producer_pid": pid,
         "recipe": {
             "id": id,
             "name": "Chicken Tikka Masala",

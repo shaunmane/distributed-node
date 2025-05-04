@@ -38,7 +38,6 @@ ___
 
     ```python
     from fastapi import FastAPI, HTTPException
-    from fastapi.responses import JSONResponse
     import os
     import uvicorn
 
@@ -57,7 +56,7 @@ ___
             raise HTTPException(status_code=404, detail="not_found")
         
         recipe = [{
-            "producer_pid": os.getpid(),
+            "producer_pid": pid,
             "recipe": {
                 "id": id,
                 "name": "Chicken Tikka Masala",
@@ -95,36 +94,39 @@ ___
 2. **Install Dependencies**
 
    ```bash
-   pip install fastapi & requests@2.32
+   pip install fastapi requests uvicorn
    ```
 
 3. **Create the Consumer Script**
 
    Create a file named `consumer.py` and add the following code:
 
-   ```javascript
-   #!/usr/bin/env node
+    ```python
+    from fastapi import FastAPI
+    import os
+    import uvicorn
+    import requests
 
-   const server = require('fastify')();
-   const fetch = require('node-fetch');
-   const HOST = process.env.HOST || '127.0.0.1';
-   const PORT = process.env.PORT || 3000;
-   const TARGET = process.env.TARGET || 'localhost:4000';
+    app = FastAPI()
 
-   server.get('/', async () => {
-       const req = await fetch(`http://${TARGET}/recipes/42`);
-       const producer_data = await req.json();
+    HOST = os.getenv('HOST', '127.0.0.1') 
+    PORT = int(os.getenv('PORT', 3000))  
+    TARGET = os.getenv('TARGET', 'localhost:4000') 
 
-       return {
-           consumer_pid: process.pid,
-           producer_data
-       };
-   });
+    @app.get("/")
+    async def recipes():
+        req = requests.get(f"http://{TARGET}/recipe/42")
+        producer_data = req.json()
 
-   server.listen(PORT, HOST, () => {
-       console.log(`Consumer running at http://${HOST}:${PORT}/`);
-   });
-   ```
+        return [{
+            "producer_pid": os.getpid(),
+            "producer_data": producer_data
+        }]    
+
+    if __name__ == "__main__":
+        print(f"Consumer running at http://{HOST}:{PORT}")
+        uvicorn.run(app, host=HOST, port=PORT)
+    ```
 
 4. **Run the Consumer Service**
 
@@ -265,8 +267,6 @@ ___
    ```sh
    docker run -p 3000:81 consumer
    ```
-
-### Step 5: Create Helm Chart
 
 ### Conclusion
 
