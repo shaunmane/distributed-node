@@ -1,0 +1,7 @@
+replicaCount: 2
+image:
+  repository: python
+  tag: "3.11-slim"
+service:
+  type: ClusterIP
+  port: 8080

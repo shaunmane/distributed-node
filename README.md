@@ -1,5 +1,7 @@
 ## Tutorial: Setting Up Producer and Consumer Services
 
+![My Diagram](diagram.png)
+
 This tutorial will guide you through the setup and running of two Python.py applications: a producer service and a consumer service. The producer service provides recipe data, and the consumer service fetches this data from the producer and returns it to the client. We will also cover installing dependencies, running the applications, and testing the setup.
 
 ## Table of Content
@@ -55,7 +57,7 @@ ___
         if id != 42:
             raise HTTPException(status_code=404, detail="not_found")
         
-        recipe = [{
+        return {
             "producer_pid": pid,
             "recipe": {
                 "id": id,
@@ -66,8 +68,7 @@ ___
                     {"id": 2, "name": "Sauce", "quantity": "2 cups"},
                 ],
             },
-        }]
-        return recipe
+        }
 
     if __name__ == "__main__":
         print(f"Producer running at http://{HOST}:{PORT}")

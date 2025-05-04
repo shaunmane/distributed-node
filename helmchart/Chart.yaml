@@ -1,0 +1,11 @@
+apiVersion: v2
+name: my-distributed-app
+description: A Helm chart for Kubernetes
+type: application
+version: 0.1.0
+appVersion: "1.0"
+dependencies:
+  - name: my-distributed-python-app
+    repository: https://github.com/shaunmane/distributed-node/
+    version: 0.1.0
+    

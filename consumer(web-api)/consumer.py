@@ -3,6 +3,7 @@ from fastapi import FastAPI
 import os
 import uvicorn
 import requests
+import json
 
 app = FastAPI()
 
@@ -22,4 +23,5 @@ async def recipes():
 
 if __name__ == "__main__":
     print(f"Consumer running at http://{HOST}:{PORT}")
+    print(requests.get(f"http://{TARGET}/recipe/42"))
     uvicorn.run(app, host=HOST, port=PORT)

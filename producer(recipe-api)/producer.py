@@ -18,7 +18,7 @@ async def recipes(id: int):
     if id != 42:
         raise HTTPException(status_code=404, detail="not_found")
     
-    recipe = [{
+    return {
         "producer_pid": pid,
         "recipe": {
             "id": id,
@@ -29,8 +29,7 @@ async def recipes(id: int):
                 {"id": 2, "name": "Sauce", "quantity": "2 cups"},
             ],
         },
-    }]
-    return recipe
+    }
 
 if __name__ == "__main__":
     print(f"Producer running at http://{HOST}:{PORT}")
