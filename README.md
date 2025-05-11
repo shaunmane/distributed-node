@@ -95,7 +95,7 @@ ___
 2. **Install Dependencies**
 
    ```bash
-   pip install fastapi requests uvicorn
+   pip install fastapi requests uvicorn 
    ```
 
 3. **Create the Consumer Script**
@@ -107,20 +107,26 @@ ___
     import os
     import uvicorn
     import requests
+    import json
+    import socket
 
     app = FastAPI()
 
     HOST = os.getenv('HOST', '127.0.0.1') 
     PORT = int(os.getenv('PORT', 3000))  
-    TARGET = os.getenv('TARGET', 'localhost:4000') 
+
+
+    localhost = socket.gethostbyname(socket.gethostname())
+    TARGET = os.getenv('TARGET', f'{localhost}:4000')
+
 
     @app.get("/")
     async def recipes():
-        req = requests.get(f"http://{TARGET}/recipe/42")
+        req = requests.get(f"http://{TARGET}/recipes/42")
         producer_data = req.json()
 
         return [{
-            "producer_pid": os.getpid(),
+            "consumer_pid": os.getpid(),
             "producer_data": producer_data
         }]    
 
