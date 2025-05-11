@@ -115,10 +115,8 @@ ___
     HOST = os.getenv('HOST', '127.0.0.1') 
     PORT = int(os.getenv('PORT', 3000))  
 
-
     localhost = socket.gethostbyname(socket.gethostname())
     TARGET = os.getenv('TARGET', f'{localhost}:4000')
-
 
     @app.get("/")
     async def recipes():
